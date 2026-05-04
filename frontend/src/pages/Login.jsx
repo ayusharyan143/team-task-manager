@@ -12,7 +12,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/auth/login", { email, password });
+
+      const API_BASE = import.meta.env.VITE_API_URL;
+
+      const { data } = await axios.post(`${API_BASE}/api/auth/login`, { email, password });
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
       navigate("/dashboard");

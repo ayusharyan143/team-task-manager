@@ -17,7 +17,9 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/auth/register", formData);
+
+      const API_BASE = import.meta.env.VITE_API_URL;
+      const { data } = await axios.post(`${API_BASE}/api/auth/register`, formData);
 
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
