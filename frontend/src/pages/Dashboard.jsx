@@ -50,10 +50,12 @@ const Dashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
+      const API_BASE = import.meta.env.VITE_API_URL;
+
       const [statsRes, tasksRes, projectsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/tasks/stats", config),
-        axios.get("http://localhost:5000/api/tasks", config),
-        axios.get("http://localhost:5000/api/projects", config),
+        axios.get(`${API_BASE}/api/tasks`, config),
+        axios.get(`${API_BASE}/api/tasks/stats`, config),
+        axios.get(`${API_BASE}/api/projects`, config),
       ]);
 
       // Access the nested .stats object from the backend
@@ -63,7 +65,7 @@ const Dashboard = () => {
 
       if (user.role === "Admin") {
         const usersRes = await axios.get(
-          "http://localhost:5000/api/users",
+          `${API_BASE}/api/users`,
           config,
         );
         setTeamMembers(usersRes.data);
@@ -130,13 +132,13 @@ const Dashboard = () => {
       if (editingTask) {
         // UPDATE logic: If editingTask exists, send a PUT request
         await axios.put(
-          `http://localhost:5000/api/tasks/${editingTask._id}`,
+          `${API_BASE}/api/tasks/${editingTask._id}`,
           payload,
           config,
         );
       } else {
         // CREATE logic: If editingTask is null, send a POST request
-        await axios.post("http://localhost:5000/api/tasks", payload, config);
+        await axios.post(`${API_BASE}/api/tasks`, payload, config);
       }
 
       closeModals(); // Close the modal and reset state
@@ -151,7 +153,7 @@ const Dashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       await axios.post(
-        "http://localhost:5000/api/projects",
+        `${API_BASE}/api/projects`,
         { name: projectName },
         config,
       );
@@ -175,7 +177,7 @@ const Dashboard = () => {
       const payload = { ...taskData };
       if (!payload.assignedTo) delete payload.assignedTo;
 
-      await axios.post("http://localhost:5000/api/tasks", payload, config);
+      await axios.post(`${API_BASE}/api/tasks`, payload, config);
       setShowTaskModal(false);
       setTaskData({
         title: "",
@@ -196,7 +198,7 @@ const Dashboard = () => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
-      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, config);
+      await axios.delete(`${API_BASE}/api/tasks/${taskId}`, config);
       fetchData();
     } catch (err) {
       alert("Delete failed: " + (err.response?.data?.message || err.message));
@@ -207,7 +209,7 @@ const Dashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       await axios.patch(
-        `http://localhost:5000/api/tasks/${taskId}/status`,
+        `${API_BASE}/api/tasks/${taskId}/status`,
         { status: newStatus },
         config,
       );
@@ -228,7 +230,7 @@ const Dashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       await axios.delete(
-        `http://localhost:5000/api/projects/${projectId}`,
+        `${API_BASE}/api/projects/${projectId}`,
         config,
       );
       fetchData(); // Refresh the list so the deleted project disappears
