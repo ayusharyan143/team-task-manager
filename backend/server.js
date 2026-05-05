@@ -21,8 +21,7 @@ app.use(express.json());
 
 
 app.use(cors({
-  origin: 'https://protective-courage-production.up.railway.app',
-  // origin: 'https://team-task-manager-client.onrender.com',
+  origin: 'https://team-task-manager-client.onrender.com',
   credentials: true
 }));
 
@@ -40,25 +39,11 @@ mongoose
   )
   .catch((err) => console.log("Database connection failed:", err));
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-//   app.get("*", (req, res) =>
-//     res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html")),
-//   );
-// }
-
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "../frontend/dist");
-  app.use(express.static(distPath));
-
-  // Yeh middleware check karega: 
-  // Agar request '/api' se start nahi ho rahi, toh seedha index.html bhej do
-  app.use((req, res, next) => {
-    if (!req.path.startsWith('/api')) {
-      return res.sendFile(path.resolve(distPath, "index.html"));
-    }
-    next();
-  });
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html")),
+  );
 }
 
 const PORT = process.env.PORT || 5000;
