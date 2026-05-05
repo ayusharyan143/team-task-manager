@@ -18,8 +18,9 @@ const Signup = () => {
     e.preventDefault();
     try {
 
-      const API_BASE = import.meta.env.VITE_API_URL;
+      const API_BASE = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
       const { data } = await axios.post(`${API_BASE}/api/auth/register`, formData);
+
 
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
