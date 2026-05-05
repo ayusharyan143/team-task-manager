@@ -21,7 +21,8 @@ app.use(express.json());
 
 
 app.use(cors({
-  origin: 'https://team-task-manager-client.onrender.com',
+  origin: 'https://protective-courage-production.up.railway.app',
+  // origin: 'https://team-task-manager-client.onrender.com',
   credentials: true
 }));
 
@@ -49,15 +50,14 @@ mongoose
 if (process.env.NODE_ENV === "production") {
   const distPath = path.join(__dirname, "../frontend/dist");
   app.use(express.static(distPath));
-  
-  // Express 5 ke liye 'SPLAT' parameter syntax use karna zaroori hai
-  app.get("/index.html", (req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
-  });
 
-  // Ye syntax saari client-side routes ko handle karega bina crash kiye
-  app.get("/:any*", (req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  // Yeh middleware check karega: 
+  // Agar request '/api' se start nahi ho rahi, toh seedha index.html bhej do
+  app.use((req, res, next) => {
+    if (!req.path.startsWith('/api')) {
+      return res.sendFile(path.resolve(distPath, "index.html"));
+    }
+    next();
   });
 }
 
