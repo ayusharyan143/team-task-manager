@@ -35,6 +35,9 @@ const Dashboard = () => {
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
 
+
+  const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+
   // Form States
   const [taskData, setTaskData] = useState({
     title: "",
