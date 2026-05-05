@@ -50,32 +50,30 @@ const Dashboard = () => {
   const [projectName, setProjectName] = useState("");
 
   const fetchData = async () => {
-    try {
-      const config = { headers: { Authorization: `Bearer ${user.token}` } };
+  try {
+    const config = { headers: { Authorization: `Bearer ${user.token}` } };
+    const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
 
-      const [statsRes, tasksRes, projectsRes] = await Promise.all([
-        axios.get(`${API_BASE}/api/tasks`, config),
-        axios.get(`${API_BASE}/api/tasks/stats`, config),
-        axios.get(`${API_BASE}/api/projects`, config),
-      ]);
+    // Order dhyan se dekho: Tasks pehle, phir Stats, phir Projects
+    const [tasksRes, statsRes, projectsRes] = await Promise.all([
+      axios.get(`${API_BASE}/api/tasks`, config),       // Ye array dega
+      axios.get(`${API_BASE}/api/tasks/stats`, config), // Ye object dega
+      axios.get(`${API_BASE}/api/projects`, config),
+    ]);
 
-      // Access the nested .stats object from the backend
-      setStats(statsRes.data.stats || statsRes.data);
-      console.log("Tasks Data:", tasksRes.data)
-      setTasks(tasksRes.data);
-      setProjects(projectsRes.data);
+    // Data set karte waqt validation lagao
+    setTasks(Array.isArray(tasksRes.data) ? tasksRes.data : []); 
+    setStats(statsRes.data.stats || statsRes.data);
+    setProjects(projectsRes.data);
 
-      if (user.role === "Admin") {
-        const usersRes = await axios.get(
-          `${API_BASE}/api/users`,
-          config,
-        );
-        setTeamMembers(usersRes.data);
-      }
-    } catch (err) {
-      console.error("Error fetching data", err);
+    if (user.role === "Admin") {
+      const usersRes = await axios.get(`${API_BASE}/api/users`, config);
+      setTeamMembers(usersRes.data);
     }
-  };
+  } catch (err) {
+    console.error("Error fetching data", err);
+  }
+};
 
   useEffect(() => {
     if (user) fetchData();
