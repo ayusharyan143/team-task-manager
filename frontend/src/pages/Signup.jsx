@@ -14,11 +14,13 @@ const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const API_BASE = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
 
-      const API_BASE = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
       const { data } = await axios.post(`${API_BASE}/api/auth/register`, formData);
 
 
