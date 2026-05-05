@@ -61,6 +61,7 @@ const Dashboard = () => {
 
       // Access the nested .stats object from the backend
       setStats(statsRes.data.stats || statsRes.data);
+      console.log("Tasks Data:", tasksRes.data)
       setTasks(tasksRes.data);
       setProjects(projectsRes.data);
 
@@ -81,7 +82,7 @@ const Dashboard = () => {
   }, [user]);
 
   // Calculation Tasks Per User
-  const tasksPerUser = tasks.reduce((acc, task) => {
+  const tasksPerUser = (tasks || []).reduce((acc, task) =>{
     const userName = task.assignedTo?.name || "Unassigned";
     acc[userName] = (acc[userName] || 0) + 1;
     return acc;
