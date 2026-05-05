@@ -53,8 +53,6 @@ const Dashboard = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
-      const API_BASE = import.meta.env.VITE_API_URL;
-
       const [statsRes, tasksRes, projectsRes] = await Promise.all([
         axios.get(`${API_BASE}/api/tasks`, config),
         axios.get(`${API_BASE}/api/tasks/stats`, config),
