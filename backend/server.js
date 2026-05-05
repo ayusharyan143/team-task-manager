@@ -10,18 +10,27 @@ const projectRoutes = require("./routes/projectRoutes");
 const { getAllUsers } = require("./controllers/projectController");
 const { protect } = require("./middleware/auth");
 
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+// dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
+
+
+app.use(cors({
+  origin: 'https://team-task-manager-client.onrender.com',
+  credentials: true
+}));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/projects", projectRoutes);
-
 app.get("/api/users", protect, getAllUsers);
+
+app.get("/health", (req, res) => res.status(200).send("Server is Healthy"));
 
 mongoose
   .connect(process.env.MONGO_URI)
