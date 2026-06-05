@@ -34,7 +34,7 @@ const Dashboard = () => {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
-
+  const [filter, setFilter] = useState("all");
 
   const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
@@ -85,6 +85,14 @@ const Dashboard = () => {
     acc[userName] = (acc[userName] || 0) + 1;
     return acc;
   }, {});
+
+  // Filter Search:
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "all") return true;
+    if (filter === "active") return task.status !== "Done";
+    if (filter === "completed") return task.status === "Done";
+    return true;
+  });
 
   // --- HANDLERS ---
 
@@ -356,9 +364,22 @@ const Dashboard = () => {
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
             <h2 className="text-xl font-bold text-slate-800">Your Tasks</h2>
-            <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">
-              {tasks.length} Active
-            </span>
+
+            <div className="flex items-center gap-3">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="border border-slate-300 rounded-lg px-3 py-2 text-sm"
+              >
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+              </select>
+
+              <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">
+                {filteredTasks.length} Tasks
+              </span>
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -372,8 +393,8 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {tasks.length > 0 ? (
-                  tasks.map((task) => (
+                {filteredTasks.length > 0 ? (
+                  filteredTasks.map((task) => (
                     <tr key={task._id} className="hover:bg-slate-50 transition">
                       <td className="p-4">
                         <div className="font-semibold text-slate-700">
