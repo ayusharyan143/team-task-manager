@@ -15,8 +15,11 @@ While the core requirement was to build a single-user personal task list, I chos
 
 ## 🔗 Live Demo Links
 
-- **Frontend Application:** [Deploy Link Here](YOUR_FRONTEND_LINK_HERE)
-- **Backend API:** [Deploy Link Here](YOUR_BACKEND_LINK_HERE)
+- **Full Application:** [Click Here](https://team-task-manager-client.onrender.com)
+
+  
+- **Frontend Application:** [Click Here](https://team-task-manager-client.onrender.com)
+- **Backend API:** [Click Here](https://team-task-manager-api-c5rt.onrender.com)
 
 > Note: The backend is hosted on a free tier and may take 30–50 seconds to spin up on the first request.
 
